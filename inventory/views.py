@@ -1,6 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+# from dal import autocomplete
+from .models import Inventory
+from .forms import InventoryEntry
+
+# class InventoryAutComplete(autocomplete.Select2QuerySetView):
+#     def get_queryset(self):
+#         qs = Inventory.objects.all()
+        
+#         if self.q:
+#             qs = qs.filter(icao__istartswith=self.q)
+#         return qs
 
 def login_user(request):
     if request.method =="POST":
@@ -17,17 +29,21 @@ def login_user(request):
     else:
         return render(request, 'inventory/signin.html', {})
 
+# @login_required(login_url='/')
 def checkout(request):
-    hello = "Hi"
-    title= "Checkout WIC Supplies"
-    return render(request, 'inventory/checkout.html', {'title':title,'hello':hello})
+    print(request)
+    pagetitle="WIC Entry"
+    if request.method == "POST":
+        inventoryform = InventoryEntry(request.POST)
+        if inventoryform.is_valid():
+            inventoryform.save()
+    inventoryform = InventoryEntry()
+    return render(request, 'inventory/checkout.html', {'pagetitle':pagetitle, 'inventoryform':inventoryform})
 
 def report(request):
     hello = "Report"
-    title= "Report"
-    return render(request, 'inventory/report.html', {'title':title,'hello':hello})
-
-
+    pagetitle= "Report"
+    return render(request, 'inventory/report.html', {'pagetitle':pagetitle,'hello':hello})
 
 def logout_user(request):
     logout(request)

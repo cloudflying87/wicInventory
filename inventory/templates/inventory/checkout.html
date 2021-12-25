@@ -3,5 +3,12 @@
 {% block content %}
 {% include 'inventory/navbar.html' %}
     <h1>Hello WIC</h1>
-    {{ hello }}
+    <div class = 'entryform'>
+        {% load crispy_forms_tags %}
+        <form method="post">
+            {% csrf_token %}
+            {% crispy inventoryform %}
+                
+        </form>
+    </div>
 {% endblock %}
