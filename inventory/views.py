@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 # from dal import autocomplete
-from .models import Inventory
-from .forms import InventoryEntry
+from .models import Transactions
+from .forms import TransactionEntry
 
 # class InventoryAutComplete(autocomplete.Select2QuerySetView):
 #     def get_queryset(self):
@@ -34,11 +34,11 @@ def checkout(request):
     print(request)
     pagetitle="WIC Entry"
     if request.method == "POST":
-        inventoryform = InventoryEntry(request.POST)
-        if inventoryform.is_valid():
-            inventoryform.save()
-    inventoryform = InventoryEntry()
-    return render(request, 'inventory/checkout.html', {'pagetitle':pagetitle, 'inventoryform':inventoryform})
+        transactionform = TransactionEntry(request.POST)
+        if transactionform.is_valid():
+            transactionform.save()
+    transactionform = TransactionEntry()
+    return render(request, 'inventory/checkout.html', {'pagetitle':pagetitle, 'transactionform':transactionform})
 
 def report(request):
     hello = "Report"
