@@ -1,28 +1,38 @@
 from django import forms
 from .models import Transactions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column,Fieldset,Field
+from crispy_forms.layout import Layout, Submit, Fieldset,Div
+
 # from dal import autocomplete
 
 class TransactionEntry(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        # self.name=kwargs.pop('intial')
+        super(TransactionEntry,self).__init__(*args, **kwargs)
         self.helper = FormHelper()
+        # self.fields['issuer'] = forms.CharField(initial=self.name)
+        self.fields['transactiondate'].label = "Date"
+        self.fields['issuer'].label = "Issuer"
+        self.helper.form_id = 'topform'
+        self.helper.form_class = 'form-main'
         self.helper.layout = Layout(
             Fieldset(
                 'Inventory Form',
-                Row(
-                    Column('transactiondate',type='date',css_class='form-group col-sm-3 mb-1'),
-                    Column('issuer',css_class='form-group col-sm-3 mb-1'),
-                    Column('hh',css_class='form-group col-sm-3 mb-1'),
+                Div(
+                    'transactiondate',
+                    'issuer',
+                    'hh',
+                    css_id="topthree"
                 ),
-                Row(
-                    Column('itemid',css_class='form-group col-sm-3 mb-1'),
-                    Column('quantity',css_class='form-group col-sm-3 mb-1'),
-                    Column('checkoutdate',css_class='form-group col-sm-3 mb-1'),
-                    Column('checkindate',css_class='form-group col-sm-3 mb-1'),
-                    Column('notes',css_class='form-group col-sm-3 mb-1'),
-                )
+                Div(
+                    'itemid',
+                    'quantity',
+                    'notes',
+                    css_id='topthree',
+                    
+                ),            
+                
+
                 
             ),
             Submit('Submit','save')

@@ -38,11 +38,6 @@ body {
   border-top-right-radius: 0;
 }
 
-html,
-body {
-  height: 100%;
-}
-
 .body-main {
   display: flex;
   align-items: center;
@@ -52,10 +47,10 @@ body {
 }
 
 .form-main {
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: auto;
+ 
+  
+  margin:0 auto;
+  
 }
 
 
@@ -65,6 +60,41 @@ body {
   border-bottom-left-radius: 0;
 }
 
-.extra-class{
-  width: 30px;
+#topthree{
+  display:flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+
+}
+
+#id_transactiondate{
+  width: 100px;
+  margin:10px
+}
+
+#id_issuer{
+  width: 80px;
+  margin: 10px
+}
+
+#id_hh{
+  width: 80px;
+  margin: 10px
+}
+
+#id_itemid{
+  width: 175px;
+  margin:10px
+}
+
+#id_quantity{
+  width: 50px;
+  margin: 10px
+}
+
+#id_notes{
+  width: 200px;
+  margin: 10px
 }

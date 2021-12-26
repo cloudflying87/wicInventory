@@ -5,7 +5,7 @@ from django.contrib import messages
 # from dal import autocomplete
 from .models import Transactions
 from .forms import TransactionEntry
-
+from django.db.models import Count, Sum
 # class InventoryAutComplete(autocomplete.Select2QuerySetView):
 #     def get_queryset(self):
 #         qs = Inventory.objects.all()
@@ -29,19 +29,24 @@ def login_user(request):
     else:
         return render(request, 'inventory/signin.html', {})
 
-# @login_required(login_url='/')
+@login_required(login_url='/')
 def checkout(request):
-    print(request)
     pagetitle="WIC Entry"
     if request.method == "POST":
         transactionform = TransactionEntry(request.POST)
         if transactionform.is_valid():
             transactionform.save()
-    transactionform = TransactionEntry()
+    else:
+        data = request.user.username
+        transactionform = TransactionEntry()
     return render(request, 'inventory/checkout.html', {'pagetitle':pagetitle, 'transactionform':transactionform})
 
 def report(request):
-    hello = "Report"
+    gettransactions = Transactions.objects.values('itemid').annotate(Sum('quantity'))
+    print(gettransactions)
+    hello = gettransactions
+    
+    # hello = "Report"
     pagetitle= "Report"
     return render(request, 'inventory/report.html', {'pagetitle':pagetitle,'hello':hello})
 
