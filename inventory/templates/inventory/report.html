@@ -2,5 +2,23 @@
 
 {% block content %}
 {% include 'inventory/navbar.html' %}
-    {{ hello }}
+<body class = "text-center">
+    <h1>Invetory After Specific Date</h1>
+    <form method=POST action="{% url 'reportform' %}" class="form-main">
+      {% csrf_token %}
+      <input type="search" class="form-control rounded" placeholder="Search Item" name="item_searched" />
+      <button type="submit" class="btn btn-outline-primary">Find Item</button>
+    </form>
+    {% if messages %}
+      {% for message in messages %}
+        <div class='airport display'>
+            {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  
+    {{ quantity }}
+  
+    </div>   
+</body>
 {% endblock %}

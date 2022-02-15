@@ -1,6 +1,10 @@
 from django.db import models
+from django.db.models.signals import pre_save
 from django.db.models.deletion import CASCADE
 from django import utils
+from django.utils.functional import SimpleLazyObject
+from django_currentuser.middleware import (
+    get_current_user, get_current_authenticated_user)
 
 class Products(models.Model):
     itemid = models.AutoField(primary_key=True)
@@ -8,10 +12,16 @@ class Products(models.Model):
     category = models.CharField(max_length=150,null=True,blank=True)
     serialnumber = models.IntegerField(null=True,blank=True)
     item = models.CharField(max_length=150,default = "Not Set",null=False,blank=False)
+    quantity = models.IntegerField()
+    quantitydate = models.DateField(default=utils.timezone.now)
     price = models.FloatField(blank=True,null=True)
     notes = models.CharField(max_length=500,null=True,blank=True)
     def __str__(self):
-        return '{} {} {}'.format(self.manufacture,self.item,self.serialnumber)
+        if self.serialnumber == 0:
+            serialnumberrep = ''
+        else:
+            serialnumberrep = self.serialnumber
+        return '{} {} {} {}'.format(self.manufacture,self.item,serialnumberrep,self.quantity)
 
 class Transactions(models.Model):
     transactiondate = models.DateField(default=utils.timezone.now)
@@ -24,3 +34,16 @@ class Transactions(models.Model):
     notes = models.CharField(max_length=500,null=True,blank=True)
     def __str__(self):
         return '{} {} {}'.format(self.transactiondate,self.itemid,self.issuer)
+
+
+def pre_save_transactions(sender,instance,*args,**kwargs):
+    currentuser = str(get_current_user())
+    instance.issuer = currentuser
+    
+    if instance.quantity != None:
+        instance.quantity = -instance.quantity
+    else:
+        instance.quantity = 0
+    
+
+pre_save.connect(pre_save_transactions, sender=Transactions)

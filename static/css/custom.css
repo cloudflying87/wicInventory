@@ -3,6 +3,10 @@ body {
   height: 100%;
 }
 
+ul{
+  list-style-type: none;
+}
+
 .body-signin {
   display: flex;
   align-items: center;
@@ -47,10 +51,7 @@ body {
 }
 
 .form-main {
- 
-  
   margin:0 auto;
-  
 }
 
 
@@ -74,18 +75,13 @@ body {
   margin:10px
 }
 
-#id_issuer{
-  width: 80px;
-  margin: 10px
-}
-
 #id_hh{
   width: 80px;
   margin: 10px
 }
 
 #id_itemid{
-  width: 175px;
+  width: 225px;
   margin:10px
 }
 

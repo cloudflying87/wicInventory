@@ -1,0 +1,19 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+{% include 'inventory/navbar.html' %}
+    <div class = 'form-main'>
+        <a href='{% url "transaction_add" %}'> Add Transaction</a>
+        <ul>
+            {% for item in object_list %}
+            <li>{{item.item}} 
+                {% if item.serialnumber != 0%}
+                    {{item.serialnumber}} : {{item.quantity}}</li>
+                {% else %}
+                    : {{item.quantity}}</li>
+                {% endif %}
+            
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -2,13 +2,27 @@
 
 {% block content %}
 {% include 'inventory/navbar.html' %}
-    <h1>Hello WIC</h1>
     <div class = 'form-main'>
         {% load crispy_forms_tags %}
         <form method="POST">
             {% csrf_token %}
             {% crispy transactionform transactionform.helper %}
-                
+            <button id="add-form" type="button">Add Another Item</button>
         </form>
     </div>
+
+    <script>
+        
+        let addButton = document.querySelector("#add-form")
+        let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+
+        
+        addButton.addEventListener('click', addForm)
+
+        function addForm(e){
+            e.preventDefault()
+            var hh = document.getElementById("id_hh").value
+            console.log(hh)
+        }
+    </script>
 {% endblock %}
