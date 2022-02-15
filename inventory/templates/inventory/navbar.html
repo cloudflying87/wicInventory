@@ -8,10 +8,16 @@
       <div class="collapse navbar-collapse" id="navbar">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
-            <a class="nav-link active" href="{% url 'checkout' %}">Checkout</a>
+            <a class="nav-link active" href="{% url 'transaction_add' %}">Add Transaction</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'pump_checkout' %}">Checkout Pump</a>
           </li>
           <li class="nav-item">
             <a class="nav-link active" href="{% url 'inventory_list' %}">Inventory List</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'updateinventory' %}">Update Inventory</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'report' %}">Report</a>

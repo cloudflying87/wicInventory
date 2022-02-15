@@ -6,16 +6,20 @@
         {% load crispy_forms_tags %}
         <form method="POST">
             {% csrf_token %}
-            {% crispy transactionform transactionform.helper %}
+            <div class = "checkout">
+                {% crispy transactionform transactionform.helper %}
+            </div>
+            
             <button id="add-form" type="button">Add Another Item</button>
+            <button type="submit">Submit</button>
         </form>
     </div>
 
     <script>
-        
+        let checkout = document.querySelectorAll(".checkout")
         let addButton = document.querySelector("#add-form")
         let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
-
+        
         
         addButton.addEventListener('click', addForm)
 

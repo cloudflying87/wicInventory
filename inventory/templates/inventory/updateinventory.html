@@ -10,10 +10,9 @@
             {{transaction_formset.management_form}}
             {% for form in transaction_formset %}
             <div class="checkout">
-            {{form.as_p}}
+            {{form}}
             </div>
             {% endfor %}
-            <button id="add-form" type="button">Add Another Item</button>
             <button type="submit">Submit</button>
         </form>
     </div>
