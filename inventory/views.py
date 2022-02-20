@@ -5,20 +5,23 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.generic import ListView
 from django.views.generic.base import TemplateView
-# from dal import autocomplete
 from .models import Transactions,Products
 from .forms import PumpEntry, TransactionEntry,TransactionFormSet,InventoryUpdate
 from django.db.models import Count, Sum
 import datetime
 from django.urls import reverse_lazy
+from dal import autocomplete
 
-# class InventoryAutComplete(autocomplete.Select2QuerySetView):
-#     def get_queryset(self):
-#         qs = Inventory.objects.all()
+class InventoryAutoComplete(autocomplete.Select2QuerySetView):
+    
+    def get_queryset(self):
         
-#         if self.q:
-#             qs = qs.filter(icao__istartswith=self.q)
-#         return qs
+        qs = Products.objects.all()
+        
+        print(self)
+        if self.q:
+            qs = qs.filter(item__istartswith=self.q)
+        return qs
 
 def login_user(request):
     if request.method =="POST":
@@ -27,7 +30,7 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('add')
+            return redirect('transaction_add')
         else:
             messages.success(request, "Incorrect username or password.")
             return redirect('/')
@@ -35,7 +38,7 @@ def login_user(request):
     else:
         return render(request, 'inventory/signin.html', {})
 
-@login_required(login_url='/')
+@login_required(login_url='/add')
 #This is the original attempt and looks pretty with the form formatted correctly, but you can only do one item at a time
 def checkout(request):
     pagetitle="WIC Entry"
@@ -64,9 +67,7 @@ class UpdateInventory(TemplateView):
         return self.render_to_response({'transaction_formset':formset,"title":pagetitle})
     
     def post(self, *args, **kwargs):
-        
         formset = InventoryUpdate(data=self.request.POST)
-        postdata = self.request.POST
         # Check if submitted forms are valid
         if formset.is_valid():
             formset.save()

@@ -5,9 +5,8 @@ from django.db.models.deletion import CASCADE
 from django import utils
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from django.utils.functional import SimpleLazyObject
 from django_currentuser.middleware import (
-    get_current_user, get_current_authenticated_user)
+    get_current_user)
 
 def add_time():
     #used to add 3 months to the pump checkout date

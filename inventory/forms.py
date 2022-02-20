@@ -4,7 +4,7 @@ from .models import Transactions, Products
 from django.forms import modelformset_factory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Fieldset,Div
-
+from dal import autocomplete
 
 TransactionFormSet = modelformset_factory(
     Transactions, fields=('transactiondate','hh','itemid','quantity'),extra=1
@@ -32,7 +32,7 @@ class TransactionEntry(forms.ModelForm):
                 Div(
                     'transactiondate',
                     'hh',
-                    'itemid',
+                    
                     'quantity',
                     css_id='topthree',
                 ),            
@@ -41,6 +41,10 @@ class TransactionEntry(forms.ModelForm):
     class Meta:
         model = Transactions
         fields = ('transactiondate','hh','itemid','quantity')
+    
+        widgets = {
+            'itemid': autocomplete.ModelSelect2
+        }
 
 
 class PumpEntry(forms.ModelForm):

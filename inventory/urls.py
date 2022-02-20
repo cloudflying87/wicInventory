@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import PumpCheckout, TransactionAddView, InventorylistView, UpdateInventory
+from .views import PumpCheckout, TransactionAddView, InventorylistView, UpdateInventory, InventoryAutoComplete
 
 urlpatterns = [
     path('', views.login_user, name="login_user"),
@@ -9,8 +9,8 @@ urlpatterns = [
     path('updateinventory', UpdateInventory.as_view(), name="updateinventory"),
     path('inventory', InventorylistView.as_view(), name='inventory_list'),
     path('checkout', views.checkout, name="checkout"),
+    path('inventory-autocomplete/<str:item>', InventoryAutoComplete.as_view(), name='inventory_autocomplete'),
     path('report', views.report, name="report"),
     path('reportform', views.report, name="reportform"),
     path('logout', views.logout_user, name="logout_user"),
-    # path('autocomplete', InventoryAutComplete.as_view(),name='autocomplete')
 ]
