@@ -1,0 +1,83 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+{% include 'inventory/navbar.html' %}
+  <div class = 'form-main'>
+    <form id="form-container" method="GET" manufacture_url="{% url 'ajax_manufacture' %}" novalidate >
+        {% csrf_token %}
+        {% for form in transaction_formset %}
+          {{form.as_p}}
+        {% endfor %}
+    </form>
+  </div>
+  <div id = 'inventory'>
+    
+  </div>
+  <script>
+    $("#id_form-0-manufacture").change(ajax_call)
+    $("#id_form-0-category").change(ajax_call)  
+    
+    
+    function ajax_call() {
+      var url = $("#form-container").attr("manufacture_url");  
+      var manufactureid = $("#id_form-0-manufacture").val(); 
+      
+      var categoryid = $("#id_form-0-category").val();
+      if (manufactureid == 8) {
+        
+        $.ajax({                       
+        url: url,                    
+        data: {
+          'category':categoryid,
+        },
+        
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#inventory").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+        });
+      }
+      
+      if (categoryid == 12) {
+        $.ajax({                       
+          url: url,                    
+          data: {
+            'manufacture': manufactureid,
+          },
+          
+          success: function (data) {   // `data` is the return of the `load_cities` view function
+            $("#inventory").html(data);  // replace the contents of the city input with the data that came from the server
+          }
+        });
+      }
+
+      if (categoryid == 12 && manufactureid == 8) {
+        console.log('working')
+        $.ajax({                       
+          url: url,                    
+          data: {
+          },
+          
+          success: function (data) {   // `data` is the return of the `load_cities` view function
+            $("#inventory").html(data);  // replace the contents of the city input with the data that came from the server
+          }
+        });
+      };
+
+      if (categoryid != 12 && manufactureid != 8 ) {
+        $.ajax({                       
+          url: url,                    
+          data: {
+            'manufacture': manufactureid,
+            'category':categoryid,
+          },
+          
+          success: function (data) {   // `data` is the return of the `load_cities` view function
+            $("#inventory").html(data);  // replace the contents of the city input with the data that came from the server
+          }
+        });
+      }
+
+    };
+  </script>
+  
+{% endblock %}

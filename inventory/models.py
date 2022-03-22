@@ -13,16 +13,41 @@ def add_time():
     today = datetime.now()
     future_date = today + relativedelta(months = 3)
     return future_date
+class Manufacture(models.Model):
+    manufactureid = models.AutoField(primary_key=True)
+    manufacture = models.CharField(max_length=150,default = "Not Set",null=False,blank=False)
+    manufacturenotes = models.CharField(max_length=350,null=True,blank=True) 
+
+    class Meta:
+        verbose_name_plural = "Manufacture"
+
+    def __str__(self):
+        return self.manufacture
+
+class Category(models.Model):
+    categoryid = models.AutoField(primary_key=True)
+    category = models.CharField(max_length=150,default = "Not Set",null=False,blank=False)
+    categorynotes = models.CharField(max_length=350,null=True,blank=True) 
+
+    class Meta:
+        verbose_name_plural = "Categories"
+
+    def __str__(self):
+        return self.category
 class Products(models.Model):
     itemid = models.AutoField(primary_key=True)
-    manufacture = models.CharField(max_length=150,default = "Not Set",null=False,blank=False)
-    category = models.CharField(max_length=150,null=True,blank=True)
+    manufacture = models.ForeignKey(Manufacture,on_delete=CASCADE)
+    category = models.ForeignKey(Category, default="Unspecified",on_delete=CASCADE)
     serialnumber = models.IntegerField(null=True,blank=True)
     item = models.CharField(max_length=150,default = "Not Set",null=False,blank=False)
     quantity = models.IntegerField()
     quantitydate = models.DateField(default=utils.timezone.now)
     price = models.FloatField(blank=True,null=True)
     notes = models.CharField(max_length=500,null=True,blank=True)
+
+    class Meta:
+        verbose_name_plural = "Products"
+
     def __str__(self):
         if self.serialnumber == 0:
             serialnumberrep = ''
@@ -39,6 +64,10 @@ class Transactions(models.Model):
     checkoutdate = models.DateField(default=utils.timezone.now, null=True,blank=True)
     checkindate = models.DateField(default=add_time, null=True,blank=True)
     notes = models.CharField(max_length=500,null=True,blank=True)
+
+    class Meta:
+        verbose_name_plural = "Transactions"
+        
     def __str__(self):
         return '{} {} {}'.format(self.transactiondate,self.itemid,self.issuer)
 

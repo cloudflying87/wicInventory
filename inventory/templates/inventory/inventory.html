@@ -8,7 +8,7 @@
             {% for item in object_list %}
             <li>{{item.item}} 
                 {% if item.serialnumber != 0%}
-                    {{item.serialnumber}} : {{item.quantity}}</li>
+                    {{item.serialnumber}} {{item.notes}}</li>
                 {% else %}
                     : {{item.quantity}}</li>
                 {% endif %}

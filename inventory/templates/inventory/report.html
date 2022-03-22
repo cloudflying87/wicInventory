@@ -2,23 +2,34 @@
 
 {% block content %}
 {% include 'inventory/navbar.html' %}
-<body class = "text-center">
-    <h1>Invetory After Specific Date</h1>
-    <form method=POST action="{% url 'reportform' %}" class="form-main">
-      {% csrf_token %}
-      <input type="search" class="form-control rounded" placeholder="Search Item" name="item_searched" />
-      <button type="submit" class="btn btn-outline-primary">Find Item</button>
+  <div class = 'form-main'>
+    <form id="form-container" method="GET" manufacture_url="{% url 'ajax_transactions' %}" novalidate >
+        {% csrf_token %}
+        {% for form in transaction_formset %}
+          {{form.as_p}}
+        {% endfor %}
     </form>
-    {% if messages %}
-      {% for message in messages %}
-        <div class='airport display'>
-            {{ message }}
-        </div>
-      {% endfor %}
-    {% endif %}
+  </div>
+  <div id = 'inventory'>
+    
+  </div>
+  <script>
+    $("id_form-0-hh").submit(function () {
+      event.preventDefault
+      console.log('working2')
+      var url = $("#form-container").attr("ajax_transactions");  
+      var hh = $("#id_form-0-hh").val(); 
+      $.ajax({                       
+        url: url,                    
+        data: {
+          'hh':hh,
+        },
+        
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#inventory").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+    });
+  </script>
   
-    {{ quantity }}
-  
-    </div>   
-</body>
 {% endblock %}

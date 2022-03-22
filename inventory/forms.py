@@ -1,6 +1,6 @@
 from django import forms
 from django.db.models.query import QuerySet
-from .models import Transactions, Products
+from .models import Transactions, Products, Category, Manufacture
 from django.forms import modelformset_factory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Fieldset,Div
@@ -13,6 +13,20 @@ TransactionFormSet = modelformset_factory(
 InventoryUpdate = modelformset_factory(
     Products, fields=('quantitydate','manufacture','item','price','quantity'),extra=1
 )
+
+class InventoryDrop(forms.ModelForm):
+    manufacture = forms.ModelChoiceField(queryset=Manufacture.objects.all(),initial=8)
+    category = forms.ModelChoiceField(queryset=Category.objects.all(),initial=12)
+    class Meta:
+        model = Products
+        fields = ('manufacture','category')
+        
+
+class HHTest(forms.ModelForm):
+    class Meta:
+        model = Transactions
+        fields = ('hh',)
+
 class TransactionEntry(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         # self.name=kwargs.pop('intial')
@@ -22,7 +36,7 @@ class TransactionEntry(forms.ModelForm):
         self.fields['transactiondate'].label = "Date"
         self.fields['hh'].label = "Household #"
         self.fields['itemid'].label = "Item Name"
-        self.fields['itemid'].queryset = Products.objects.exclude(category = 'pump')
+        self.fields['itemid'].queryset = Products.objects.exclude(category = 10)
         self.fields['quantity'].label = "Quantity"
         self.helper.form_id = 'topform'
         self.helper.form_class = 'form-main'
@@ -56,7 +70,7 @@ class PumpEntry(forms.ModelForm):
         self.fields['transactiondate'].label = "Date"
         self.fields['hh'].label = "Household #"
         self.fields['itemid'].label = "Item Name"
-        self.fields['itemid'].queryset = Products.objects.filter(category = 'pump')
+        self.fields['itemid'].queryset = Products.objects.filter(category = 10)
         self.helper.form_id = 'topform'
         self.helper.form_class = 'form-main'
         self.helper.layout = Layout(

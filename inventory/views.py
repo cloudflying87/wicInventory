@@ -1,3 +1,5 @@
+from nis import cat
+from tokenize import Number
 from django.forms.formsets import formset_factory
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate,login,logout
@@ -6,22 +8,22 @@ from django.contrib import messages
 from django.views.generic import ListView
 from django.views.generic.base import TemplateView
 from .models import Transactions,Products
-from .forms import PumpEntry, TransactionEntry,TransactionFormSet,InventoryUpdate
+from .forms import HHTest, PumpEntry, InventoryDrop, TransactionEntry,TransactionFormSet,InventoryUpdate
 from django.db.models import Count, Sum
 import datetime
 from django.urls import reverse_lazy
 from dal import autocomplete
 
-class InventoryAutoComplete(autocomplete.Select2QuerySetView):
+# class InventoryAutoComplete(autocomplete.Select2QuerySetView):
     
-    def get_queryset(self):
+#     def get_queryset(self):
         
-        qs = Products.objects.all()
+#         qs = Products.objects.all()
         
-        print(self)
-        if self.q:
-            qs = qs.filter(item__istartswith=self.q)
-        return qs
+#         print(self)
+#         if self.q:
+#             qs = qs.filter(item__istartswith=self.q)
+#         return qs
 
 def login_user(request):
     if request.method =="POST":
@@ -74,6 +76,7 @@ class UpdateInventory(TemplateView):
             return redirect(reverse_lazy("inventory_list"))
 
         return self.render_to_response({'transaction_formset': formset})
+
 class TransactionAddView(TemplateView):
     template_name = 'inventory/addtransaction.html'
     
@@ -95,7 +98,7 @@ class TransactionAddView(TemplateView):
                 print(eachform)
                 print('form-'+eachform+'-itemid')
             formset.save()
-            return redirect(reverse_lazy("inventory_list"))
+            return redirect(reverse_lazy("report"))
 
         return self.render_to_response({'transaction_formset': formset})
 
@@ -119,30 +122,44 @@ class PumpCheckout(TemplateView):
 
         return self.render_to_response({'transaction_formset': formset})
 
-def reportform(request):
-
-    if request.method == "POST":
-        item_searched = request.POST['item_searched']
+def get_manufacture(request):
+    print(request)
     
-        
-        #Handles the blank form entry
-        if item_searched == '':
-            messages.success(request,"You forgot to type in an item")
-            return render(request, 'inventory/report.html', {})
-        
-        
-        print(item_searched)
+    manufacture = request.GET.get('manufacture')
+    category = request.GET.get('category')
+    if manufacture == None:
+        inventory = Products.objects.filter(category=category).order_by('item')    
+    if category == None:
+        inventory = Products.objects.filter(manufacture=manufacture).order_by('item')
+    
+    if category != None and manufacture != None:
+        inventory = Products.objects.filter(manufacture=manufacture,category=category).order_by('item')
 
-def report(request):
-    gettransactions = Products.objects.filter(category='pump')
-    quantity = gettransactions[:5]
-    # b = Products(itemid = 1, manufacture = 'Medela', category = 'pump', serialnumber = 0, item = 'Harmony Manual Pump', quantity = 10, quantitydate = '2021-12-26')
-    b = Products.objects.all().get(itemid=1)
-    b.quantity = 20
-    b.save()
-    # hello = "Report"
-    pagetitle= "Report"
-    return render(request, 'inventory/report.html', {'title':pagetitle,'quantity':quantity})
+    if category == None and manufacture == None: 
+        inventory = Products.objects.all().order_by('item')
+    
+    
+    return render(request,'inventory/manufacture.html',{'inventory':inventory}) 
+
+def transactions(request):
+    hh = request.GET.get('hh')
+    print(request)
+    information = Transactions.objects.filter(hh=hh).order_by('transactiondate')
+    return render(request,'inventory/manufacture.html',{'information':information}) 
+
+class TransactionsView(TemplateView):
+    template_name = 'inventory/report.html'
+    def get(self, *args, **kwargs):
+        pagetitle = "Report"
+        formset = formset_factory(HHTest)
+        return self.render_to_response({'transaction_formset':formset,"title":pagetitle})
+class InventoryDropView(TemplateView):
+    template_name = 'inventory/inventorydrop.html'
+    def get(self, *args, **kwargs):
+        pagetitle = "Inventory Report"
+        formset = formset_factory(InventoryDrop)
+        return self.render_to_response({'transaction_formset':formset,"title":pagetitle})
+
 
 def logout_user(request):
     logout(request)
