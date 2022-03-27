@@ -3,30 +3,33 @@
 {% block content %}
 {% include 'inventory/navbar.html' %}
   <div class = 'form-main'>
-    <form id="form-container" method="GET" manufacture_url="{% url 'ajax_transactions' %}" novalidate >
+    <form id="form-container" method="GET" hhrequest_url="{% url 'ajax_transactions' %}" novalidate >
         {% csrf_token %}
         {% for form in transaction_formset %}
           {{form.as_p}}
         {% endfor %}
+
     </form>
   </div>
+  
   <div id = 'inventory'>
     
   </div>
   <script>
-    $("id_form-0-hh").submit(function () {
-      event.preventDefault
-      console.log('working2')
-      var url = $("#form-container").attr("ajax_transactions");  
+    $("#id_form-0-hh").on("change keyup paste",function () {
+      // event.preventDefault
+      
+      var url = $("#form-container").attr("hhrequest_url");  
       var hh = $("#id_form-0-hh").val(); 
+      console.log(url)
       $.ajax({                       
         url: url,                    
         data: {
           'hh':hh,
         },
         
-        success: function (data) {   // `data` is the return of the `load_cities` view function
-          $("#inventory").html(data);  // replace the contents of the city input with the data that came from the server
+        success: function (data) {   
+          $("#inventory").html(data);  
         }
       });
     });

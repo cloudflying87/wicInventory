@@ -8,11 +8,9 @@
             {% load crispy_forms_tags %}
             {% csrf_token %}
             {{transaction_formset.management_form}}
-            {% for form in transaction_formset %}
             <div class="checkout">
             {{form.as_p}}
             </div>
-            {% endfor %}
             <button type="submit">Submit</button>
         </form>
     </div>

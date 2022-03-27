@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.views.generic import ListView
+from django.views.generic import ListView, FormView
 from django.views.generic.base import TemplateView
 from .models import Transactions,Products
 from .forms import HHTest, PumpEntry, InventoryDrop, TransactionEntry,TransactionFormSet,InventoryUpdate
@@ -102,28 +102,25 @@ class TransactionAddView(TemplateView):
 
         return self.render_to_response({'transaction_formset': formset})
 
-class PumpCheckout(TemplateView):
+class PumpCheckout(FormView):
     template_name = 'inventory/pumpcheckout.html'
     
-    def get(self, *args, **kwargs):
-        pagetitle = "Pump Checkout"
-        
-        formset = formset_factory(PumpEntry)
-        return self.render_to_response({'transaction_formset':formset,"title":pagetitle})
-    
-    def post(self, *args, **kwargs):
-        
-        formset = self.request.POST
+    form_class = PumpEntry
 
-        # Check if submitted forms are valid
-        if formset.is_valid():
-            formset.save()
-            return redirect(reverse_lazy("inventory_list"))
 
-        return self.render_to_response({'transaction_formset': formset})
+    success_url ="pumpcheckout"
+
+    def form_valid(self, form):
+
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+         
+        # perform a action here
+        form.save()
+        return super().form_valid(form)
 
 def get_manufacture(request):
-    print(request)
+    
     
     manufacture = request.GET.get('manufacture')
     category = request.GET.get('category')
@@ -143,9 +140,9 @@ def get_manufacture(request):
 
 def transactions(request):
     hh = request.GET.get('hh')
-    print(request)
     information = Transactions.objects.filter(hh=hh).order_by('transactiondate')
-    return render(request,'inventory/manufacture.html',{'information':information}) 
+    print(information)
+    return render(request,'inventory/manufacture.html',{'inventory':information}) 
 
 class TransactionsView(TemplateView):
     template_name = 'inventory/report.html'

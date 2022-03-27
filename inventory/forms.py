@@ -69,8 +69,8 @@ class PumpEntry(forms.ModelForm):
         # self.fields['issuer'] = forms.CharField(initial=self.name)
         self.fields['transactiondate'].label = "Date"
         self.fields['hh'].label = "Household #"
-        self.fields['itemid'].label = "Item Name"
-        self.fields['itemid'].queryset = Products.objects.filter(category = 10)
+        self.fields['itemid'].label = "Pump"
+        self.fields['itemid'].queryset = Products.objects.filter(category = 10, quantity = 1  )
         self.helper.form_id = 'topform'
         self.helper.form_class = 'form-main'
         self.helper.layout = Layout(

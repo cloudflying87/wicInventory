@@ -37,7 +37,7 @@ class Category(models.Model):
 class Products(models.Model):
     itemid = models.AutoField(primary_key=True)
     manufacture = models.ForeignKey(Manufacture,on_delete=CASCADE)
-    category = models.ForeignKey(Category, default="Unspecified",on_delete=CASCADE)
+    category = models.ForeignKey(Category, default="Generic",on_delete=CASCADE)
     serialnumber = models.IntegerField(null=True,blank=True)
     item = models.CharField(max_length=150,default = "Not Set",null=False,blank=False)
     quantity = models.IntegerField()
@@ -69,23 +69,30 @@ class Transactions(models.Model):
         verbose_name_plural = "Transactions"
         
     def __str__(self):
-        return '{} {} {}'.format(self.transactiondate,self.itemid,self.issuer)
+        return '{} {} {} {} {}'.format(self.transactiondate,self.quantity,self.itemid.item,self.issuer,self.notes)
 
 
 
 def pre_save_transactions(sender,instance,*args,**kwargs):
     currentuser = str(get_current_user())
     instance.issuer = currentuser
-    
     item = Products.objects.get(itemid=instance.itemid_id)
     
+    
     if instance.quantity != None:
+        
         updatequantity = item.quantity - instance.quantity
         instance.quantity = -instance.quantity
         item.quantity = updatequantity
         item.save()
     else:
-        instance.quantity = 0
+        
+        item.quantity = 0
+        item.save()
+    
+    if item.category == 'Pump': 
+        print('working')
+        item.quantity = 0
     
     
 
