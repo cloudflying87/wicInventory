@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.query import QuerySet
+from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from django.db.models.deletion import CASCADE
 from django import utils
@@ -72,27 +73,24 @@ class Transactions(models.Model):
         return '{} {} {} {} {}'.format(self.transactiondate,self.quantity,self.itemid.item,self.issuer,self.notes)
 
 
-
+@receiver(pre_save, sender=Transactions)
 def pre_save_transactions(sender,instance,*args,**kwargs):
     currentuser = str(get_current_user())
     instance.issuer = currentuser
     item = Products.objects.get(itemid=instance.itemid_id)
-    
-    
+    # category = Products.objects.get(category_id=instance.itemid_id)
+    print(instance.quantity)
+
     if instance.quantity != None:
         
         updatequantity = item.quantity - instance.quantity
         instance.quantity = -instance.quantity
         item.quantity = updatequantity
         item.save()
-    else:
-        
-        item.quantity = 0
-        item.save()
+   
     
-    if item.category == 'Pump': 
-        print('working')
-        item.quantity = 0
+    
+        
     
     
 

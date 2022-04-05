@@ -1,10 +1,9 @@
-
 {% extends 'inventory/base.html' %}
 
 {% block content %}
 {% include 'inventory/navbar.html' %}
 {% include 'inventory/pumpnavbar.html' %}
-    <h1>Pump Check-out</h1>
+    <h1>Pump Check-in</h1>
     <div class = 'form-main'>
         <form id="form-container" method="POST">
             {% load crispy_forms_tags %}
@@ -13,7 +12,7 @@
             <div class="checkout">
             {{form.as_p}}
             </div>
-            <button type="submit">Submit</button>
+            <button type="submit">Check-in</button>
         </form>
     </div>
    

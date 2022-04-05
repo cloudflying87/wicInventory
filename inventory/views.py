@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.views.generic import ListView, FormView
 from django.views.generic.base import TemplateView
 from .models import Transactions,Products
-from .forms import HHTest, PumpEntry, InventoryDrop, TransactionEntry,TransactionFormSet,InventoryUpdate
+from .forms import HHTest, PumpEntry, InventoryDrop, TransactionEntry,TransactionFormSet,InventoryUpdate,PumpCheckin, PumpStatus
 from django.db.models import Count, Sum
 import datetime
 from django.urls import reverse_lazy
@@ -102,6 +102,26 @@ class TransactionAddView(TemplateView):
 
         return self.render_to_response({'transaction_formset': formset})
 
+class PumpCheckin(FormView):
+    template_name = 'inventory/pumpcheckin.html'
+    
+    form_class = PumpCheckin
+
+
+    success_url ="pumpcheckin"
+
+    def form_valid(self, form):
+
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+         
+        # perform a action here
+        
+        form.save()
+        item = Products.objects.get(itemid=form.data['itemid'])
+        item.quantity = 1
+        item.save()
+        return super().form_valid(form)
 class PumpCheckout(FormView):
     template_name = 'inventory/pumpcheckout.html'
     
@@ -111,17 +131,26 @@ class PumpCheckout(FormView):
     success_url ="pumpcheckout"
 
     def form_valid(self, form):
+        form.save()
+        item = Products.objects.get(itemid=form.data['itemid'])
+        item.quantity = 0
+        item.save()
+        return super().form_valid(form)
 
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
-         
-        # perform a action here
+class PumpStatus(FormView):
+    template_name = 'inventory/pumpstatus.html'
+    
+    form_class = PumpStatus
+
+
+    success_url ="pumpstatus"
+
+    def form_valid(self, form):
+        print(form.data)
         form.save()
         return super().form_valid(form)
 
 def get_manufacture(request):
-    
-    
     manufacture = request.GET.get('manufacture')
     category = request.GET.get('category')
     if manufacture == None:
@@ -144,6 +173,22 @@ def transactions(request):
     print(information)
     return render(request,'inventory/manufacture.html',{'inventory':information}) 
 
+def pumpstatus(request):
+    itemid = request.GET.get('itemid')
+    information = Transactions.objects.filter(itemid=itemid).order_by('transactiondate')
+    hh1 = Transactions.objects.filter(itemid=itemid).last()
+    
+    # if hh1 != None:
+    if hh1.hh == None:
+        hh = 1234
+    else:
+        hh = hh1.hh
+    
+    if hh1.checkoutdate == None:
+        checkoutdate = ''
+    else:
+        checkoutdate = (hh1.checkoutdate).strftime("%Y-%d-%d")
+    return render(request,'inventory/pumpnotesdisplay.html',{'pumpnotes':information,'hh':hh,'checkoutdate':checkoutdate}) 
 class TransactionsView(TemplateView):
     template_name = 'inventory/report.html'
     def get(self, *args, **kwargs):

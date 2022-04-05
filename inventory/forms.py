@@ -60,7 +60,31 @@ class TransactionEntry(forms.ModelForm):
             'itemid': autocomplete.ModelSelect2
         }
 
+class PumpCheckin(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        # self.name=kwargs.pop('intial')
+        super(PumpCheckin,self).__init__(*args, **kwargs)
+        self.fields['itemid'].label = "Pump"
+        self.fields['itemid'].queryset = Products.objects.filter(category = 10, quantity = 0  )
+        self.fields['transactiondate'].label = "Date"
+        
+    class Meta:
+        model = Transactions
+        fields = ('itemid','notes','transactiondate')
 
+class PumpStatus(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        # self.name=kwargs.pop('intial')
+        super(PumpStatus,self).__init__(*args, **kwargs)
+        # self.helper = FormHelper()
+        self.fields['hh'].label = "Household #"
+        self.fields['itemid'].label = "Pump"
+        self.fields['checkoutdate'].label = "Check-out Date"
+        self.fields['checkindate'].label = "Check-in Date"
+        self.fields['itemid'].queryset = Products.objects.filter(category = 10, quantity = 0  )
+    class Meta:
+        model = Transactions
+        fields = ('itemid','hh','notes','checkoutdate','checkindate')
 class PumpEntry(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         # self.name=kwargs.pop('intial')
@@ -70,6 +94,8 @@ class PumpEntry(forms.ModelForm):
         self.fields['transactiondate'].label = "Date"
         self.fields['hh'].label = "Household #"
         self.fields['itemid'].label = "Pump"
+        self.fields['checkoutdate'].label = "Check-out Date"
+        self.fields['checkindate'].label = "Check-in Date"
         self.fields['itemid'].queryset = Products.objects.filter(category = 10, quantity = 1  )
         self.helper.form_id = 'topform'
         self.helper.form_class = 'form-main'
@@ -84,9 +110,9 @@ class PumpEntry(forms.ModelForm):
                     css_id='topthree',
                 ),            
             ),
-            Submit('Submit','save')
+            
         )
     class Meta:
         model = Transactions
-        fields = ('transactiondate','hh','itemid','checkoutdate','checkindate','notes')
+        fields = ('itemid','hh','notes','transactiondate','checkoutdate','checkindate')
  

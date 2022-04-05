@@ -1,0 +1,16 @@
+<p>Transaction Date, HH#, Notes, User</p>
+<ul>
+    {% for note in pumpnotes %}
+        <li>{{note.transactiondate}} {{note.hh}} {{note.notes}} {{note.issuer}}<li>
+    {% endfor %}
+</ul>
+
+
+<script>
+    var hh = "{{hh}}"
+    var checkoutdate1 = "{{checkoutdate}}"
+    console.log(checkoutdate1)
+    console.log(typeof(checkoutdate1))
+    $("#id_hh").val(hh);
+    $("#id_checkoutdate").val(checkoutdate1);
+</script>

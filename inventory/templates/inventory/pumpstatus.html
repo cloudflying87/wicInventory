@@ -1,0 +1,42 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+{% include 'inventory/navbar.html' %}
+{% include 'inventory/pumpnavbar.html' %}
+    <h1>Pump Status Update</h1>
+    <div class = 'form-main'>
+        <form id="form-container" method="POST" hhrequest_url="{% url 'ajax_pumpstatus' %}" novalidate>
+            {% load crispy_forms_tags %}
+            {% csrf_token %}
+            {{transaction_formset.management_form}}
+            <div class="checkout">
+            {{form.as_p}}
+            </div>
+            <button type="submit">Update</button>
+        </form>
+    </div>
+   
+    <div id = 'inventory'>
+        
+    
+    </div>
+    <script>
+      $("#id_itemid").change(function () {
+        // event.preventDefault
+        
+        var url = $("#form-container").attr("hhrequest_url");  
+        var itemid = $("#id_itemid").val(); 
+        
+        $.ajax({                       
+          url: url,                    
+          data: {
+            'itemid':itemid,
+          },
+          
+          success: function (data) {   
+            $("#inventory").html(data);
+          }
+        });
+      });
+    </script>
+{% endblock %}
