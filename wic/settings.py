@@ -116,7 +116,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_ROOT = '/home/flyhomem/wic.flyhomemn.com/staticcollection'
-STATIC_URL = '/static/'
+STATIC_URL = '/staticcollection/'
 STATICFILES_DIRS = [
     "/home/flyhomem/virtualenv/wic.flyhomemn.com/3.8/lib/python3.8/site-packages/",
     '/home/flyhomem/wic.flyhomemn.com/static',
