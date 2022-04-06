@@ -14,16 +14,13 @@ import datetime
 from django.urls import reverse_lazy
 from dal import autocomplete
 
-# class InventoryAutoComplete(autocomplete.Select2QuerySetView):
-    
-#     def get_queryset(self):
+class InventoryAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Products.objects.all()
         
-#         qs = Products.objects.all()
-        
-#         print(self)
-#         if self.q:
-#             qs = qs.filter(item__istartswith=self.q)
-#         return qs
+        if self.q:
+            qs = qs.filter(item__istartswith=self.q)
+        return qs
 
 def login_user(request):
     if request.method =="POST":
@@ -45,7 +42,7 @@ def login_user(request):
 def checkout(request):
     pagetitle="WIC Entry"
     data = request.user.username
-    print(data)
+    
     if request.method == "POST":
         transactionform = TransactionEntry(request.POST)
         if transactionform.is_valid():
@@ -89,16 +86,11 @@ class TransactionAddView(TemplateView):
     def post(self, *args, **kwargs):
         
         formset = TransactionFormSet(data=self.request.POST)
-        postdata = self.request.POST
+        
         # Check if submitted forms are valid
-        if formset.is_valid():
-            numofforms = postdata['form-TOTAL_FORMS']
-            print(numofforms)
-            for eachform in numofforms:
-                print(eachform)
-                print('form-'+eachform+'-itemid')
+        if formset.is_valid():    
             formset.save()
-            return redirect(reverse_lazy("report"))
+            return redirect(reverse_lazy("transaction_add"))
 
         return self.render_to_response({'transaction_formset': formset})
 
@@ -139,14 +131,10 @@ class PumpCheckout(FormView):
 
 class PumpStatus(FormView):
     template_name = 'inventory/pumpstatus.html'
-    
     form_class = PumpStatus
-
-
     success_url ="pumpstatus"
 
     def form_valid(self, form):
-        print(form.data)
         form.save()
         return super().form_valid(form)
 
@@ -170,8 +158,8 @@ def get_manufacture(request):
 def transactions(request):
     hh = request.GET.get('hh')
     information = Transactions.objects.filter(hh=hh).order_by('transactiondate')
-    print(information)
-    return render(request,'inventory/manufacture.html',{'inventory':information}) 
+    
+    return render(request,'inventory/reportdisplay.html',{'inventory':information}) 
 
 def pumpstatus(request):
     itemid = request.GET.get('itemid')

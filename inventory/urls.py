@@ -2,11 +2,12 @@ from django.urls import path
 
 from inventory.models import Transactions
 from . import views
-from .views import PumpCheckout, TransactionAddView, InventorylistView, TransactionsView, UpdateInventory,InventoryDropView, PumpCheckin, PumpStatus
+from .views import PumpCheckout, TransactionAddView, InventorylistView, TransactionsView, InventoryAutoComplete,InventoryDropView, PumpCheckin, PumpStatus
 
 urlpatterns = [
     path('', views.login_user, name="login_user"),
     path('add', TransactionAddView.as_view(), name="transaction_add"),
+    path('itemlookup', InventoryAutoComplete.as_view(), name='itemlookup'),
     path('pumpcheckout', PumpCheckout.as_view(), name="pump_checkout"),
     path('pumpcheckin', PumpCheckin.as_view(), name="pump_checkin"),
     path('pumpstatus', PumpStatus.as_view(), name="pump_status"),
@@ -20,5 +21,5 @@ urlpatterns = [
     # path('updateinventory', UpdateInventory.as_view(), name="updateinventory"),
     # path('inventory', InventorylistView.as_view(), name='inventory_list'),
     # path('checkout', views.checkout, name="checkout"),
-    # path('inventory-autocomplete/<str:item>', InventoryAutoComplete.as_view(), name='inventory_autocomplete'),
+    
 ]

@@ -5,25 +5,20 @@
 {% include 'inventory/navbar.html' %}
     <div class = 'form-main'>
         <form id="form-container" method="POST">
+            <button id="add-form" type="button">Add Another Item</button>
             {% load crispy_forms_tags %}
             {% csrf_token %}
             {{transaction_formset.management_form}}
             {% for form in transaction_formset %}
-            <div class="checkout">
-            {{ form.as_p }}
-            {{ form.media.js}}
-            </div>
+                {% crispy form %}
             {% endfor %}
-            <button id="add-form" type="button">Add Another Item</button>
-            <button type="submit">Submit</button>
+            
         </form>
     </div>
     <script>
-        // $( document ).ready(function() {
-            // $('#id_form-0-itemid').select2();
-        // });
-            let checkout = document.querySelectorAll(".checkout")
-            let container = document.querySelector("#form-container")
+            let checkout = document.querySelectorAll("#parentdiv")
+            let parentdiv = document.querySelector("#parentdiv")
+            let container = document.querySelector("#topthree")
             let addButton = document.querySelector("#add-form")
             let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
             
@@ -35,17 +30,21 @@
                 e.preventDefault()
                 let dateinput = document.getElementById("id_form-0-transactiondate").value 
                 let hh = document.getElementById("id_form-0-hh").value
-                let newForm = checkout[0].cloneNode(true)
+                let newForm = container.cloneNode(true)
                 let formRegex = RegExp(`form-(\\d){1}-`,'g')
                 formNum++
                 newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
-                container.insertBefore(newForm, addButton)
+                parentdiv.appendChild(newForm)
+                
+                let select2hide = document.getElementsByClassName('text-center')[0].childNodes[3].children[0][7].children[1].children[formNum].children[2].getElementsByClassName('controls')[0].children[1]
+                
+                select2hide.style="display: none";
                 
                 totalForms.setAttribute('value', `${formNum+1}`)
                 document.getElementById(`id_form-${formNum}-transactiondate`).value = dateinput
                 document.getElementById(`id_form-${formNum}-hh`).value = hh
-                document.getElementById(`id_form-0-itemid`).hidden = true
-                // $('#id_form-1-itemid').select2();
+                document.getElementById('id_form-0-itemid').hidden = true
+                
             }
         // });   
     </script>

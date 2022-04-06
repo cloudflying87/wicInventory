@@ -29,14 +29,12 @@ class HHTest(forms.ModelForm):
 
 class TransactionEntry(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        # self.name=kwargs.pop('intial')
         super(TransactionEntry,self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        # self.fields['issuer'] = forms.CharField(initial=self.name)
         self.fields['transactiondate'].label = "Date"
         self.fields['hh'].label = "Household #"
         self.fields['itemid'].label = "Item Name"
-        self.fields['itemid'].queryset = Products.objects.exclude(category = 10)
+        # self.fields['itemid'].queryset = Products.objects.exclude(category = 10)
         self.fields['quantity'].label = "Quantity"
         self.helper.form_id = 'topform'
         self.helper.form_class = 'form-main'
@@ -44,12 +42,16 @@ class TransactionEntry(forms.ModelForm):
             Fieldset(
                 'Inventory Form',
                 Div(
-                    'transactiondate',
-                    'hh',
-                    
-                    'quantity',
-                    css_id='topthree',
-                ),            
+                    Div(
+                        'transactiondate',
+                        'hh',
+                        'itemid',
+                        'quantity',
+                        css_id='topthree',
+                    ), 
+                    css_id = 'parentdiv'
+                ),
+                Submit('Submit', 'Save')           
             ),
         )
     class Meta:
@@ -57,7 +59,7 @@ class TransactionEntry(forms.ModelForm):
         fields = ('transactiondate','hh','itemid','quantity')
     
         widgets = {
-            'itemid': autocomplete.ModelSelect2
+            'itemid': autocomplete.ModelSelect2(url='itemlookup')
         }
 
 class PumpCheckin(forms.ModelForm):
@@ -67,7 +69,6 @@ class PumpCheckin(forms.ModelForm):
         self.fields['itemid'].label = "Pump"
         self.fields['itemid'].queryset = Products.objects.filter(category = 10, quantity = 0  )
         self.fields['transactiondate'].label = "Date"
-        
     class Meta:
         model = Transactions
         fields = ('itemid','notes','transactiondate')
@@ -87,10 +88,8 @@ class PumpStatus(forms.ModelForm):
         fields = ('itemid','hh','notes','checkoutdate','checkindate')
 class PumpEntry(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        # self.name=kwargs.pop('intial')
         super(PumpEntry,self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        # self.fields['issuer'] = forms.CharField(initial=self.name)
         self.fields['transactiondate'].label = "Date"
         self.fields['hh'].label = "Household #"
         self.fields['itemid'].label = "Pump"

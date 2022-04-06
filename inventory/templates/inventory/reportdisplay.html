@@ -1,0 +1,6 @@
+<p>Transaction Date, HH#, Notes, User</p>
+<ul>
+    {% for note in inventory %}
+        <li>{{note.transactiondate}} {{note.itemid.item}} {% if note.itemid.serialnumber != 0 %} {{note.itemid.serialnumber}} {% endif %} {{note.quantity}} {{note.issuer}}<li>
+    {% endfor %}
+</ul>
