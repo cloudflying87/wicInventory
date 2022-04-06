@@ -115,10 +115,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
+STATIC_ROOT = '/home/flyhomem/wic.flyhomemn.com/staticcollection'
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [
+    "/home/flyhomem/virtualenv/wic.flyhomemn.com/3.8/lib/python3.8/site-packages/",
+    '/home/flyhomem/wic.flyhomemn.com/static',
+    os.path.join(BASE_DIR, 'static')
+    
+    ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_files')
+
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "static_media")
