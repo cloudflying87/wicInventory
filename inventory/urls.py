@@ -1,11 +1,12 @@
 from django.urls import path
-
+from django.contrib import admin
 from inventory.models import Transactions
 from . import views
 from .views import PumpCheckout, TransactionAddView, InventorylistView, TransactionsView, InventoryAutoComplete,InventoryDropView, PumpCheckin, PumpStatus
 
 urlpatterns = [
     path('', views.login_user, name="login_user"),
+    path('admin', admin.site.urls),
     path('add', TransactionAddView.as_view(), name="transaction_add"),
     path('itemlookup', InventoryAutoComplete.as_view(), name='itemlookup'),
     path('pumpcheckout', PumpCheckout.as_view(), name="pump_checkout"),

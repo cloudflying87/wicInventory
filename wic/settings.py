@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['wic.flyhomemn.com','localhost']
 
@@ -97,7 +97,7 @@ USE_TZ = True
 
 
 STATIC_ROOT = '/home/flyhomem/wic.flyhomemn.com/staticcollection'
-STATIC_URL = '/staticcollection/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     "/home/flyhomem/virtualenv/wic.flyhomemn.com/3.8/lib/python3.8/site-packages/",
     '/home/flyhomem/wic.flyhomemn.com/static',
