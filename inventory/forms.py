@@ -2,6 +2,7 @@ from django import forms
 from django.db.models.query import QuerySet
 from .models import Transactions, Products, Category, Manufacture
 from django.forms import modelformset_factory
+from django.forms.widgets import DateInput
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Fieldset,Div
 from dal import autocomplete
@@ -59,7 +60,9 @@ class TransactionEntry(forms.ModelForm):
         fields = ('transactiondate','hh','itemid','quantity')
     
         widgets = {
-            'itemid': autocomplete.ModelSelect2(url='itemlookup')
+            'itemid': autocomplete.ModelSelect2(url='itemlookup'),
+            'transactiondate': DateInput(attrs={'type': 'date'}),
+
         }
 
 class PumpCheckin(forms.ModelForm):
@@ -72,6 +75,9 @@ class PumpCheckin(forms.ModelForm):
     class Meta:
         model = Transactions
         fields = ('itemid','notes','transactiondate')
+        widgets = {
+            'transactiondate': DateInput(attrs={'type': 'date'}),
+        }
 
 class PumpStatus(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -86,6 +92,10 @@ class PumpStatus(forms.ModelForm):
     class Meta:
         model = Transactions
         fields = ('itemid','hh','notes','checkoutdate','checkindate')
+        widgets = {
+            'checkoutdate': DateInput(attrs={'type': 'date'}),
+            'checkindate': DateInput(attrs={'type': 'date'}),
+        }
 class PumpEntry(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PumpEntry,self).__init__(*args, **kwargs)
@@ -114,4 +124,9 @@ class PumpEntry(forms.ModelForm):
     class Meta:
         model = Transactions
         fields = ('itemid','hh','notes','transactiondate','checkoutdate','checkindate')
+        widgets = {
+            'transactiondate': DateInput(attrs={'type': 'date'}),
+            'checkoutdate': DateInput(attrs={'type': 'date'}),
+            'checkindate': DateInput(attrs={'type': 'date'}),
+        }
  

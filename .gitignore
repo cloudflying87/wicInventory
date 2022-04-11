@@ -62,6 +62,7 @@ wheels/
 *.egg 
 *.manifest 
 *.spec 
+/inventory/migrations/
 
 # Installer logs 
 pip-log.txt 

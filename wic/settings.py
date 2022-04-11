@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True
+
 
 ALLOWED_HOSTS = ['wic.flyhomemn.com','localhost']
 
@@ -95,18 +95,17 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+DEBUG = False
 STATIC_ROOT = '/home/flyhomem/wic.flyhomemn.com/staticcollection'
 STATIC_URL = '/static/'
+# STATIC_URL = 'static/'
+# DEBUG = True
 STATICFILES_DIRS = [
     "/home/flyhomem/virtualenv/wic.flyhomemn.com/3.8/lib/python3.8/site-packages/",
     '/home/flyhomem/wic.flyhomemn.com/static',
     os.path.join(BASE_DIR, 'staticcollection')
     
     ]
-
-
-
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "static_media")

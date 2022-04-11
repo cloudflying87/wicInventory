@@ -28,12 +28,22 @@ class Category(models.Model):
     categoryid = models.AutoField(primary_key=True)
     category = models.CharField(max_length=150,default = "Not Set",null=False,blank=False)
     categorynotes = models.CharField(max_length=350,null=True,blank=True) 
-
     class Meta:
         verbose_name_plural = "Categories"
 
     def __str__(self):
         return self.category
+
+class Status(models.Model):
+    statusid = models.AutoField(primary_key=True)
+    status = models.CharField(max_length=150,default = "Not Set",null=False,blank=False)
+    statusnotes = models.CharField(max_length=350,null=True,blank=True) 
+
+    class Meta:
+        verbose_name_plural = "Status"
+
+    def __str__(self):
+        return self.status
 class Products(models.Model):
     itemid = models.AutoField(primary_key=True)
     manufacture = models.ForeignKey(Manufacture,on_delete=CASCADE)
@@ -44,6 +54,8 @@ class Products(models.Model):
     quantitydate = models.DateField(default=utils.timezone.now)
     price = models.FloatField(blank=True,null=True)
     notes = models.CharField(max_length=500,null=True,blank=True)
+    statusid = models.ForeignKey(Status,on_delete=CASCADE,default = 1)
+
 
     class Meta:
         verbose_name_plural = "Products"
@@ -61,8 +73,8 @@ class Transactions(models.Model):
     itemid = models.ForeignKey(Products,default=119,on_delete=CASCADE)
     hh = models.IntegerField(null=True,blank=True)
     issuer = models.CharField(max_length=150,null=True,blank=True)
-    checkoutdate = models.DateField(default=utils.timezone.now, null=True,blank=True)
-    checkindate = models.DateField(default=add_time, null=True,blank=True)
+    checkoutdate = models.DateField(null=True,blank=True)
+    checkindate = models.DateField(null=True,blank=True)
     notes = models.CharField(max_length=500,null=True,blank=True)
 
     class Meta:

@@ -67,6 +67,7 @@ class UpdateInventory(TemplateView):
     
     def post(self, *args, **kwargs):
         formset = InventoryUpdate(data=self.request.POST)
+        print(formset)
         # Check if submitted forms are valid
         if formset.is_valid():
             formset.save()

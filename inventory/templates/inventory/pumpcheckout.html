@@ -8,13 +8,65 @@
     <div class = 'form-main'>
         <form id="form-container" method="POST">
             {% load crispy_forms_tags %}
-            {% csrf_token %}
-            {{transaction_formset.management_form}}
+            {% csrf_token %} 
             <div class="checkout">
             {{form.as_p}}
             </div>
             <button type="submit">Submit</button>
         </form>
     </div>
-   
+    <body onload="bodyLoadDates()"></body>
+<script>
+        
+        function bodyLoadDates(){
+            dateInput = getIntialDate()
+            addDates(dateInput)
+        }
+        
+        
+        let transactiondate = document.querySelector('#id_transactiondate')
+        transactiondate.addEventListener('change',changeDates)
+
+        let checkoutdate = document.querySelector('#id_checkoutdate')
+        checkoutdate.addEventListener('change',checkoutChange)
+
+        function changeDates(e){
+            e.preventDefault()
+            dateInput = getIntialDate()
+            addDates(dateInput)
+        }
+
+        function checkoutChange(e){
+            e.preventDefault()
+            dateInput = document.getElementById('id_checkoutdate').value
+            addDates(dateInput)
+        }
+        function getIntialDate(){
+            let dateInput = document.getElementById("id_transactiondate").value
+            document.getElementById('id_checkoutdate').value = dateInput 
+            return dateInput
+        }
+
+        function addDates(dateInput){
+            
+            var newDate = new Date(dateInput)
+            var changeDate = newDate.setMonth(newDate.getMonth()+4)
+
+            if(newDate.getMonth()<10) {
+                setmonth = '0'+newDate.getMonth()
+            } else {
+                setmonth = newDate.getMonth()
+            }
+
+            if(newDate.getDate()<10) {
+                setday = '0'+newDate.getDate()
+            } else {
+                setday = newDate.getDate()
+            }
+
+            var formattedate = newDate.getFullYear()+'-'+setmonth+'-'+setday
+            
+            document.getElementById('id_checkindate').value = formattedate
+        };
+</script>
 {% endblock %}
